@@ -10,8 +10,11 @@ let main argv =
     let consoleWriterActor =
         spawn myActorSystem "consoleWriterActor" (actorOf Actors.consoleWriterActor)
 
+    let validationActor =
+        spawn myActorSystem "validationActor" (actorOf2 (Actors.validationActor consoleWriterActor))
+
     let consoleReaderActor =
-        spawn myActorSystem "consoleReaderActor" (actorOf2 (Actors.consoleReadActor consoleWriterActor))
+        spawn myActorSystem "consoleReaderActor" (actorOf2 (Actors.consoleReadActor validationActor))
 
     consoleReaderActor <! Messages.Start
 
