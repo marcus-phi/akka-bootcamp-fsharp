@@ -5,8 +5,7 @@ open unit_1_tail
 
 [<EntryPoint>]
 let main argv =
-    let myActorSystem =
-        System.create "MyActorSystem" (Configuration.load ())
+    let myActorSystem = System.create "MyActorSystem" (Configuration.load ())
 
     let consoleWriterActor =
         spawn myActorSystem "consoleWriterActor" (actorOf Actors.consoleWriterActor)
@@ -30,13 +29,10 @@ let main argv =
             [ SpawnOption.SupervisorStrategy(strategy ()) ]
 
     let fileValidationActor =
-        spawn
-            myActorSystem
-            "validationActor"
-            (actorOf2 (Actors.fileValidationActor consoleWriterActor tailCoordinatorActor))
+        spawn myActorSystem "validationActor" (actorOf2 (Actors.fileValidationActor consoleWriterActor))
 
     let consoleReaderActor =
-        spawn myActorSystem "consoleReaderActor" (actorOf2 (Actors.consoleReadActor fileValidationActor))
+        spawn myActorSystem "consoleReaderActor" (actorOf2 Actors.consoleReadActor)
 
     consoleReaderActor <! Messages.Start
 

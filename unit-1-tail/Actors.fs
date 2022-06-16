@@ -9,7 +9,7 @@ open unit_1_tail.FileUtility
 open unit_1_tail.Messages
 
 module Actors =
-    let fileValidationActor (consoleWriter: IActorRef) (tailCoordinator: IActorRef) (mailbox: Actor<_>) message =
+    let fileValidationActor (consoleWriter: IActorRef) (mailbox: Actor<_>) message =
         let (|IsFileUri|_|) path =
             if File.Exists path then
                 Some path
@@ -31,7 +31,7 @@ module Actors =
             consoleWriter
             <! InputSuccess($"Starting processing for %s{message}")
 
-            tailCoordinator
+            select "/user/tailCoordinatorActor" mailbox.Context.System
             <! StartTail(message, consoleWriter)
         | _ ->
             consoleWriter
@@ -39,7 +39,7 @@ module Actors =
 
             mailbox.Sender() <! Continue
 
-    let consoleReadActor (validation: IActorRef) (mailbox: Actor<_>) message =
+    let consoleReadActor (mailbox: Actor<_>) message =
         let doPrintInstructions () =
             Console.WriteLine "Please provide the URI of a log file on disk.\n"
 
@@ -53,7 +53,9 @@ module Actors =
 
             match line with
             | Exit -> mailbox.Context.System.Terminate() |> ignore
-            | _ -> validation <! line
+            | _ ->
+                select "/user/validationActor" mailbox.Context.System
+                <! line
 
         match box message with
         | :? Command as command ->
@@ -114,5 +116,7 @@ module Actors =
 
     let tailCoordinatorActor (mailbox: Actor<_>) message =
         match message with
-        | StartTail(filePath, reporter) -> spawn mailbox.Context "tailActor" (tailActor filePath reporter) |> ignore
+        | StartTail (filePath, reporter) ->
+            spawn mailbox.Context "tailActor" (tailActor filePath reporter)
+            |> ignore
         | _ -> ()
