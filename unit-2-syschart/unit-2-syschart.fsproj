@@ -7,12 +7,28 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Include="ViewModels\ViewModelBase.fs" />
+        <Compile Include="ViewModels\MainWindowViewModel.fs" />
+        <Compile Include="Views\MainWindow.xaml.fs" />
+        <Compile Include="App.xaml.fs" />
         <Compile Include="Program.fs" />
+        <Content Include="runtimeconfig.template.json" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="JaggerJo.Avalonia.FuncUI.DSL" Version="0.5.3" />
-      <PackageReference Include="JaggerJo.Avalonia.FuncUI.Elmish" Version="0.5.3" />
+        <Compile Update="**\*.xaml.fs">
+            <DependentUpon>%(Filename)</DependentUpon>
+        </Compile>
+        <AvaloniaResource Include="**\*.xaml">
+            <SubType>Designer</SubType>
+        </AvaloniaResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Avalonia.Desktop" Version="0.10.15" />
+      <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.15" />
+      <PackageReference Include="ScottPlot.Avalonia" Version="4.1.48" />
+      <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
     </ItemGroup>
 
 </Project>
