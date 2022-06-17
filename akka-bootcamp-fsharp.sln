@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "unit-1-tail", "unit-1-tail\unit-1-tail.fsproj", "{3B933651-08A1-4F5E-8B97-50EAA0B9A835}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "unit-2-syschart", "unit-2-syschart\unit-2-syschart.fsproj", "{497226F1-32E4-455A-8E68-5F1CDD9DA56D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{3B933651-08A1-4F5E-8B97-50EAA0B9A835}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B933651-08A1-4F5E-8B97-50EAA0B9A835}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B933651-08A1-4F5E-8B97-50EAA0B9A835}.Release|Any CPU.Build.0 = Release|Any CPU
+		{497226F1-32E4-455A-8E68-5F1CDD9DA56D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{497226F1-32E4-455A-8E68-5F1CDD9DA56D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{497226F1-32E4-455A-8E68-5F1CDD9DA56D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{497226F1-32E4-455A-8E68-5F1CDD9DA56D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
