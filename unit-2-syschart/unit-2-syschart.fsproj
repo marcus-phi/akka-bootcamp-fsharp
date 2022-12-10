@@ -23,7 +23,7 @@
       <PackageReference Include="Akka.FSharp" Version="1.4.47" />
       <PackageReference Include="JaggerJo.Avalonia.FuncUI.DSL" Version="0.5.3" />
       <PackageReference Include="JaggerJo.Avalonia.FuncUI.Elmish" Version="0.5.3" />
-      <PackageReference Include="ScottPlot.Avalonia" Version="4.1.48" />
+      <PackageReference Include="OxyPlot.Avalonia" Version="2.1.0-Preview1" />
     </ItemGroup>
 
 </Project>

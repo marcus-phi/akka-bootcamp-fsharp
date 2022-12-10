@@ -8,9 +8,9 @@ open Avalonia.FuncUI
 open Avalonia.FuncUI.Builder
 open Avalonia.FuncUI.DSL
 open Avalonia.FuncUI.Hosts
-open Avalonia.Layout
 open Avalonia.Themes.Fluent
-open ScottPlot.Avalonia
+open OxyPlot
+open OxyPlot.Avalonia
 open syschart.Messages
 
 [<AbstractClass; Sealed>]
@@ -21,18 +21,19 @@ type Views =
             spawn actorSystem "charting" Actors.chartingActor
 
         let series =
-            ChartDataHelper.randomSeries "FakeSeries1" None
+            ChartDataHelper.randomSeries "FakeSeries 1" None
 
         Component (fun ctx ->
 
-            let plotOutlet =
-                ctx.useState (null, renderOnChange = false)
-
+            let plotModel =
+                ctx.useState (PlotModel(), renderOnChange = true)
+                
             ctx.useEffect (
                 handler =
                     (fun () ->
-                        chartActor
-                        <! InitializeChart (plotOutlet.Current, series)),
+                        chartActor <! InitializeChart (plotModel.Current, series)
+                        plotModel.Set plotModel.Current
+                    ),
                 triggers = [ EffectTrigger.AfterInit ],
                 identity = "initialize"
             )
@@ -45,20 +46,22 @@ type Views =
                         DockPanel.children [
                             Button.create [
                                 Button.dock Dock.Bottom
-                                Button.verticalAlignment VerticalAlignment.Bottom
+                                Button.verticalAlignment Avalonia.Layout.VerticalAlignment.Bottom
                                 Button.margin 5
                                 Button.padding (10., 5.)
-                                Button.content "Add Series"
+                                Button.content $"Add Series {plotModel.Current.Series.Count + 1}"
                                 Button.onClick (fun _ ->
-                                    let newSeriesName = $"FakeSeries {plotOutlet.Current.Plot.GetPlottables().Length + 1}"
+                                    let newSeriesName = $"FakeSeries {plotModel.Current.Series.Count + 1}"
                                     let newSeries = ChartDataHelper.randomSeries newSeriesName None
-                                    chartActor <! AddSeries (plotOutlet.Current, newSeries)
+                                    chartActor <! AddSeries (plotModel.Current, newSeries)
+                                    plotModel.Set plotModel.Current
                                 )
                             ]
                         ]
                     ]
-                    ViewBuilder.Create<AvaPlot>([])
-                    |> View.withOutlet plotOutlet.Set
+                    ViewBuilder.Create<PlotView>([
+                        AttrBuilder<PlotView>.CreateProperty<PlotModel>(PlotView.ModelProperty, plotModel.Current, ValueNone)
+                    ])
                 ]
             ])
 
@@ -80,6 +83,7 @@ type App() =
 
     override this.Initialize() =
         this.Styles.Add(FluentTheme(baseUri = null, Mode = FluentThemeMode.Dark))
+        this.Styles.Load("resm:OxyPlot.Avalonia.Themes.Default.xaml?assembly=OxyPlot.Avalonia")
 
     override this.OnFrameworkInitializationCompleted() =
         match this.ApplicationLifetime with
